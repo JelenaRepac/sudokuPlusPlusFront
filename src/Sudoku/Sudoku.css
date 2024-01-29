@@ -1,9 +1,29 @@
-.sudoku-board {
-  display: grid;
-  grid-template-columns: repeat(9, 40px);
-  grid-template-rows: repeat(9, 40px);
-  gap: 1px;
+
+body {
+  font-family:verdana,helvetica,arial,sans-serif;
+  border:0px; margin:0px; padding:0px;
+      
+  background:url(
+      data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAIUlEQVQYV2N89urtfwYiACNIoZSYMCMhtaMK8YYQ0cEDAG5yJ8eLRhTfAAAAAElFTkSuQmCC
+  ) repeat;
 }
+h1{
+  color:rgba(78, 71, 71, 0.332);
+  margin:0px 0px 2px 0px;
+  font-size:180px;
+  padding:2px 1px 5px 1px;
+  text-align:center;    
+}
+.sudoku-board {
+  display: flex;
+  flex-direction: column; /* Display rows in a column */
+  align-items: center;
+}
+
+.sudoku-row {
+  display: flex;
+}
+
 .sudoku-cell {
   width: 40px;
   height: 40px;
@@ -12,5 +32,56 @@
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
-  border: 1px solid #000;
+  border: 1px solid #000; /* Cell border */
+}
+.invalid {
+  color: red;
+}
+
+/* CSS */
+.button-check {
+  margin-top: 10px;
+  align-self: center;
+  background-color: #fff;
+  background-image: none;
+  background-position: 0 90%;
+  background-repeat: repeat no-repeat;
+  background-size: 4px 3px;
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color: #41403e;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1rem;
+  line-height: 23px;
+  outline: none;
+  padding: .75rem;
+  text-decoration: none;
+  transition: all 235ms ease-in-out;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-check:hover {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+}
+
+.button-check:focus {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}
+
+.selected {
+  background-color: lightblue;
+  color: black;
+  border: 1px solid rgb(11, 11, 74); 
 }

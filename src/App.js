@@ -4,7 +4,7 @@ import SudokuView from './Sudoku/SudokuView';
 const App = () => {
   return (
     <div className="app-container">
-      <h1>Sudoku App</h1>
+      <h1>SUDOKU ++</h1>
       <SudokuView />
     </div>
   );
