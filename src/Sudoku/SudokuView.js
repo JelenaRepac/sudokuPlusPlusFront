@@ -4,11 +4,13 @@ import { useState } from 'react';
 import './Sudoku.css';
 import { CiPause1 } from "react-icons/ci";
 import { CiPlay1 } from "react-icons/ci";
+import { fetchBoardFromBackend, checkCellValue, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard,fetchBoardFromBackendMedium,fetchBoardFromBackendEasy} from './SudokuController.js';
+import Swal from 'sweetalert2';
+import classNames from 'classnames';
 import SudokuCell from './SudokuCell.js';
 
-
 const SudokuView = () => {
-  const [board, setboard] = useState([]);
+  const [board, setBoard] = useState([]);
   const [invalidCells, setInvalidCells] = useState([]);
   const [selectedNumber, setSelectedNumber] = useState(null);
   const [selectedCell, setSelectedCell] = useState(null);
@@ -16,44 +18,45 @@ const SudokuView = () => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   useEffect(() => {
-    // const fetchboard = async () => {
+    // const fetchData = async () => {
     //   try {
-    //     const response = await fetch('http://localhost:8080/api/board');
-    //     const data = await response.json();
-    //     setboard(data);
-    //     console.log(data)
+    //     const data = await fetchBoardFromBackend();
+    //     console.log(data.board);
+    //     setBoard(data.board);
+
     //   } catch (error) {
-    //     console.error('Error fetching Sudoku board:', error);
+    //     console.log(error);
     //   }
     // };
-
-    // fetchboard();
+    // fetchData();
+    // setBoard([
+    //   [5, 3, 0, 0, 7, 0, 0, 0, 0],
+    //   [6, 0, 0, 1, 9, 5, 0, 0, 0],
+    //   [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    //   [8, 0, 0, 0, 6, 0, 0, 0, 3],
+    //   [4, 0, 0, 8, 0, 3, 0, 0, 1],
+    //   [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    //   [0, 6, 0, 0, 0, 0, 2, 8, 0],
+    //   [0, 0, 0, 4, 1, 9, 0, 0, 5],
+    //   [0, 0, 0, 0, 8, 0, 0, 7, 9]
+    // ]
+    // );
   }, []);
 
 
   const handleCellClick = (rowIndex, columnIndex) => {
+    const isEditable = board[rowIndex][columnIndex] === 0;
+
     setSelectedNumber(board[rowIndex][columnIndex]);
-    setSelectedCell({ rowIndex, columnIndex });
+    setSelectedCell({ rowIndex, columnIndex, isEditable });
   };
-  const checkCellValue = async (rowIndex, columnIndex, value) => {
+  const checkCellValue = (rowIndex, columnIndex, value) => {
+    // const result = checkCellValue(board,rowIndex,columnIndex,value);
 
-    // try {
-
-    //   const response = await fetch('http://localhost:8080/api/check-cell-value', {
-    //     method: 'POST',
-    //     body: board+","+rowIndex+","+columnIndex+","+value
-    //   });
-
-    //   const result = await response.json();
-    //   return result;
-    // } catch (error) {
-    //   console.error('Error checking cell value:', error);
-    //   return false;
-    // }
   };
   const handleChange = async (rowIndex, columnIndex, value) => {
 
-    const isValueValid = await checkCellValue(rowIndex, columnIndex, value);
+    const isValueValid = checkCellValue(rowIndex, columnIndex, value);
 
     setInvalidCells((prevInvalidCells) =>
       isValueValid
@@ -64,22 +67,9 @@ const SudokuView = () => {
     const newData = [...board];
     newData[rowIndex][columnIndex] = value;
 
-    setboard(newData);
+    setBoard(newData);
   };
   useEffect(() => {
-    setboard([
-      [5, 3, 0, 0, 7, 0, 0, 0, 0],
-      [6, 0, 0, 1, 9, 5, 0, 0, 0],
-      [0, 9, 8, 0, 0, 0, 0, 6, 0],
-      [8, 0, 0, 0, 6, 0, 0, 0, 3],
-      [4, 0, 0, 8, 0, 3, 0, 0, 1],
-      [7, 0, 0, 0, 2, 0, 0, 0, 6],
-      [0, 6, 0, 0, 0, 0, 2, 8, 0],
-      [0, 0, 0, 4, 1, 9, 0, 0, 5],
-      [0, 0, 0, 0, 8, 0, 0, 7, 9]
-    ]
-    );
-
     let intervalId;
     if (isTimerRunning) {
       intervalId = setInterval(() => {
@@ -98,30 +88,85 @@ const SudokuView = () => {
     setIsTimerRunning(false);
   };
 
-  const initializeNewBoard = () =>{
-    //Citanje nove table sa back a
+  const initializeNewBoard = async () =>{
+    try {
+      const data = await fetchBoardFromBackend();
+      setBoard(data.board);
+    } catch (error) {
+      console.log(error);
+    }
   }
   const algorithmResult = () => {
     //resavanje table uz pomoc algoritma i dobijanje rezultata
   }
 
+  const generateHardBoard = async() =>{
+    //generisanje sudoku table 
+    try{
+      const data = await fetchBoardFromBackendHard();
+      console.log(data);
+      setBoard(data.board);
+    }catch (error) {
+      console.log(error);
+    }
+  }
 
-  //CHECK WHOLE BOARD VALIDITY
-  const checkSudokuValidity = async () => {
+  const generateMediumBoard = async() =>{
+    //generisanje sudoku table 
+    try{
+      const data = await fetchBoardFromBackendMedium();
+      console.log(data);
+      setBoard(data.board);
+    }catch (error) {
+      console.log(error);
+    }
+  }
+  const generateEasyBoard = async() =>{
+    //generisanje sudoku table 
+    try{
+      const data = await fetchBoardFromBackendEasy();
+      console.log(data);
+      setBoard(data.board);
+    }catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleSolveSudoku = async (board) =>
+  {
     try {
-      const response = await fetch('http://localhost:8080/api/if-valid', {
-        mode: 'no-cors',
-        method: 'POST',
+      const data = await solveSudoku();
+      console.log(data);
+      setBoard(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  //CHECK WHOLE BOARD VALIDITY
+  const handleCheckSudokuValidity = async () => {
+    try {
+      // const isValid = await checkSudokuValidity(board);
 
-        body: board, // Send board directly, not within params
-      });
-      const result = await response.json();
-      console.log(result);
+      if (true) {
+        Swal.fire({
+          title: "Sudoku is not solved",
+          width: 600,
+          padding: "3em",
+          color: "#716add",
+          background: "#fff url(/public/logo192.png)",
+          backdrop: `
+            rgba(0,0,130,0.1)
+            url("/images/nyan-cat.gif")
+            left top
+            no-repeat
+          `
+        });
+      }
     } catch (error) {
       console.error('Error checking Sudoku validity:', error);
     }
   };
-
+    
   return (
     <div>
       <div className="timer">{timer} seconds</div>
@@ -140,24 +185,25 @@ const SudokuView = () => {
         
         <div className="sudoku-board">
 
-          {board.map((row, rowIndex) => (
+        {board.map((row, rowIndex) => (
              <div key={rowIndex} className="sudoku-row">
              {row.map((cell, columnIndex) => (
-               <SudokuCell
-                 key={`${rowIndex}-${columnIndex}`}
-                 value={cell}
-                 isSelected={
-                   (selectedCell &&
-                     (selectedCell.rowIndex === rowIndex || selectedCell.columnIndex === columnIndex)) ||
-                   (selectedNumber && cell === selectedNumber)
-                 }
-                //  isInvalid={invalidCells.some(
+              <SudokuCell
+              key={`${rowIndex}-${columnIndex}`}
+              value={cell}
+              isSelected={
+                (selectedCell &&
+                  (selectedCell.rowIndex === rowIndex || selectedCell.columnIndex === columnIndex)) ||
+                (selectedNumber && cell === selectedNumber)
+              }
+               //  isInvalid={invalidCells.some(
                 //    (invalidCell) =>
                 //      invalidCell[0] === rowIndex && invalidCell[1] === columnIndex
                 //  )}
-                 onCellClick={() => handleCellClick(rowIndex, columnIndex)}
-                 onCellBlur={(value) => handleChange(rowIndex, columnIndex, value)}
-               />
+              isEditable={cell === 0}  // Check if the cell is editable
+              onCellClick={() => handleCellClick(rowIndex, columnIndex)}
+              onCellBlur={(value) => handleChange(rowIndex, columnIndex, value)}
+            />
              ))}
            </div>
           ))}
@@ -167,10 +213,10 @@ const SudokuView = () => {
             <CiPause1 onClick={pauseTimer} className="icon" />
           </div>
           <div className='check'>
-            <button onClick={checkSudokuValidity} className="button-check" style={{"width":"140px"}}>
+            <button onClick={handleCheckSudokuValidity} className="button-check" style={{"width":"140px"}}>
               Check Validity
             </button>
-            <button className="button-check" style={{"width":"140px"}}>
+            <button onClick={handleSolveSudoku} className="button-check" style={{"width":"140px"}}>
               Solve
             </button>
           </div>
@@ -180,13 +226,13 @@ const SudokuView = () => {
 
 
          <div className='levels'> 
-            <button onClick={checkSudokuValidity} className="button-check" style={{"color":"green"}}>
+            <button onClick={generateEasyBoard} className="button-check" style={{"color":"green"}}>
               EASY
             </button>
-            <button onClick={checkSudokuValidity} className="button-check" style={{"color":"yellow"}}>
+            <button onClick={generateMediumBoard} className="button-check" style={{"color":"yellow"}}>
               MEDIUM
             </button>
-            <button onClick={checkSudokuValidity} className="button-check" style={{"color":"red"}}>
+            <button onClick={generateHardBoard} className="button-check" style={{"color":"red"}}>
               HARD
             </button>
           </div>

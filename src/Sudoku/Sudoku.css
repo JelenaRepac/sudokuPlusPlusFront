@@ -154,3 +154,7 @@ h1{
   flex-direction: row;
   gap: 50px;
 }
+
+.editable{
+  color: #41403e;
+}

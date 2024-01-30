@@ -1,30 +1,33 @@
-import React from 'react';
+// SudokuCell.js
+import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
 
-const SudokuCell = ({
-  value,
-  isSelected,
-  isInvalid,
-  onCellClick,
-  onCellBlur,
-}) => {
-  const handleCellClick = () => {
-    onCellClick();
-  };
+const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable }) => {
+    const cellClasses = classNames({
+        'editable': isEditable, // Add this class for editable cells
+      });
+  const [content, setContent] = useState(value === 0 ? '' : value.toString());
 
-  const handleCellBlur = (e) => {
-    onCellBlur(parseInt(e.target.innerText, 10) || 0);
+  useEffect(() => {
+    setContent(value === 0 ? '' : value.toString());
+  }, [value]);
+
+  const handleInput = (e) => {
+    if (isEditable) {
+      const newValue = e.target.innerText;
+      setContent(newValue);
+    }
   };
 
   return (
     <div
-      className={`sudoku-cell ${
-        isSelected ? 'selected' : ''
-      } ${isInvalid ? 'invalid' : ''}`}
-      contentEditable
-      onClick={handleCellClick}
-      onBlur={handleCellBlur}
+      className={classNames('sudoku-cell', { selected: isSelected, editable: isEditable })}
+      contentEditable={isEditable}
+      onClick={onCellClick}
+      onBlur={(e) => onCellBlur(parseInt(e.target.innerText, 10) || 0)}
+      onInput={handleInput}
     >
-      {value !== 0 ? <span className={isInvalid ? 'invalid-number' : ''}>{value}</span> : ' '}
+      {content}
     </div>
   );
 };
