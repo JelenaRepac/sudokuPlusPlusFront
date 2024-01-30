@@ -10,10 +10,11 @@ body {
 h1{
   color:rgba(78, 71, 71, 0.332);
   margin:0px 0px 2px 0px;
-  font-size:180px;
+  font-size:150px;
   padding:2px 1px 5px 1px;
   text-align:center;    
 }
+
 .sudoku-board {
   display: flex;
   flex-direction: column; /* Display rows in a column */
@@ -22,6 +23,42 @@ h1{
 
 .sudoku-row {
   display: flex;
+}
+
+.sudoku-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: self-start;
+}
+
+.additional-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.additional-field {
+  margin-bottom: 8px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: #41403e;
+}
+
+.timer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-right: 100px;
+
+}
+
+.button-check {
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 16px;
 }
 
 .sudoku-cell {
@@ -69,6 +106,7 @@ h1{
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  
 }
 
 .button-check:hover {
@@ -81,7 +119,38 @@ h1{
 }
 
 .selected {
-  background-color: lightblue;
+  background-color:rgba(78, 71, 71, 0.332);
   color: black;
   border: 1px solid rgb(11, 11, 74); 
+}
+
+.icon {
+  font-size: 30px;
+  cursor: pointer;
+  padding: 20px;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adjust the gap between buttons and icons */
+}
+
+.levels{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 30px;
+ 
+}
+
+.controls{
+  display: flex;
+  flex-direction: column;
+}
+
+.check{
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
 }
