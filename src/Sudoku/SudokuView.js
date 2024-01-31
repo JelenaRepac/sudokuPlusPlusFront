@@ -4,10 +4,12 @@ import { useState } from 'react';
 import './Sudoku.css';
 import { CiPause1 } from "react-icons/ci";
 import { CiPlay1 } from "react-icons/ci";
+import { GrClearOption } from "react-icons/gr";
 import { fetchBoardFromBackend, checkCellValue, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard, fetchBoardFromBackendMedium, fetchBoardFromBackendEasy } from './SudokuController.js';
 import Swal from 'sweetalert2';
 import SudokuCell from './SudokuCell.js';
-
+import { LuTimerReset } from "react-icons/lu";
+import { PiClockClockwiseThin  } from "react-icons/pi";
 const SudokuView = () => {
   const [board, setBoard] = useState([]);
   const [initialCells, setInitialCells] = useState([]);
@@ -95,6 +97,24 @@ const SudokuView = () => {
   const pauseTimer = () => {
     setIsTimerRunning(false);
   };
+  const resetTimer = () =>{
+    setTimer(0);
+  }
+  const clearBord = () => {
+    const clearedBoard = board.map((row, rowIndex) =>
+    row.map((cell, colIndex) =>
+      initialCells.some(
+        (position) => position.row === rowIndex && position.col === colIndex
+      )
+        ? cell
+        : 0
+    )
+  );
+
+  setBoard(clearedBoard);
+  setInvalidCells([]);
+
+  };
 
   const initializeNewBoard = async () => {
     try {
@@ -164,21 +184,14 @@ const SudokuView = () => {
   //CHECK WHOLE BOARD VALIDITY
   const handleCheckSudokuValidity = async () => {
     try {
-      // const isValid = await checkSudokuValidity(board);
-
-      if (true) {
+       const isValid = await checkSudokuValidity(board);
+      console.log(isValid.result);
+      if (isValid.result) {
         Swal.fire({
-          title: "Sudoku is not solved",
+          title: "Sudoku is solved",
           width: 600,
           padding: "3em",
-          color: "#716add",
-          background: "#fff url(/public/logo192.png)",
-          backdrop: `
-            rgba(0,0,130,0.1)
-            url("/images/nyan-cat.gif")
-            left top
-            no-repeat
-          `
+          color: "#7FFFD4",
         });
       }
     } catch (error) {
@@ -237,6 +250,8 @@ const SudokuView = () => {
           <div className='action'>
             <CiPlay1 onClick={startTimer} className="icon" />
             <CiPause1 onClick={pauseTimer} className="icon" />
+            <PiClockClockwiseThin onClick = {resetTimer} className="icon" style={{"font-size":"35px"}} />
+          
           </div>
           <div className='check'>
             <button onClick={handleCheckSudokuValidity} className="button-check" style={{ "width": "140px" }}>
@@ -244,6 +259,9 @@ const SudokuView = () => {
             </button>
             <button onClick={handleSolveSudoku} className="button-check" style={{ "width": "140px" }}>
               Solve
+            </button>
+            <button onClick={clearBord} className="button-check" style={{ "width": "140px" }}>
+              CLEAR
             </button>
           </div>
 

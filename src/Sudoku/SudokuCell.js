@@ -9,7 +9,6 @@ const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable, is
     'selected': isSelected,
     'invalid': isInvalid
   });
-  console.log('invalid:', isInvalid); 
   const [content, setContent] = useState(value === 0 ? '' : value.toString());
 
   useEffect(() => {
