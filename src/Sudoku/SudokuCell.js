@@ -2,10 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 
-const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable }) => {
-    const cellClasses = classNames({
-        'editable': isEditable, // Add this class for editable cells
-      });
+const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable, isInitial, isInvalid }) => {
+  const cellClasses = classNames({
+    'editable': isEditable,
+    'initial': isInitial,
+    'selected': isSelected,
+    'invalid': isInvalid
+  });
+  console.log('invalid:', isInvalid); 
   const [content, setContent] = useState(value === 0 ? '' : value.toString());
 
   useEffect(() => {
@@ -18,13 +22,17 @@ const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable }) 
       setContent(newValue);
     }
   };
+  const handleBlur = (e) => {
+    const newValue = parseInt(e.target.innerText, 10) || 0;
+    onCellBlur(newValue);
+  };
 
   return (
     <div
-      className={classNames('sudoku-cell', { selected: isSelected, editable: isEditable })}
+      className={classNames('sudoku-cell', cellClasses)}
       contentEditable={isEditable}
       onClick={onCellClick}
-      onBlur={(e) => onCellBlur(parseInt(e.target.innerText, 10) || 0)}
+      onBlur={handleBlur}
       onInput={handleInput}
     >
       {content}

@@ -44,37 +44,44 @@
       throw error;
     }
   };
-   export const checkCellValue = async (board,rowIndex, columnIndex, value) =>{
+  export const checkCellValue = async (board, rowIndex, columnIndex, value) => {
     try {
-        const response = await fetch('http://localhost:8080/api/check-cell-value', {
-          method: 'POST',
-          body: board+","+rowIndex+","+columnIndex+","+value
-        });
-        if(!response.ok){
-            throw new Error('Failed to fetch Sudoku board');
-        }
-        const result = await response.json();
-        return result;
-      } catch (error) {
-        console.error('Error checking cell value:', error);
-        throw error; 
-      }
-  }
-
-  export const checkSudokuValidity = async (board) => {
-    try {
-      const response = await fetch('http://localhost:8080/api/if-valid', {
-        mode: 'no-cors',
+      const response = await fetch('http://localhost:8080/check-cell-value', {
         method: 'POST',
-        body: board, 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          board: board,
+          rowIndex: rowIndex,
+          columnIndex: columnIndex,
+          value: value,
+        }),
+        credentials: 'include',
       });
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error('Error checking Sudoku validity:', error);
-      throw error; 
+      console.error('Error checking cell value:', error);
+      throw error;
     }
   };
+  
+
+  // export const checkSudokuValidity = async (board) => {
+  //   try {
+  //     const response = await fetch('http://localhost:8080/api/if-valid', {
+  //       mode: 'no-cors',
+  //       method: 'POST',
+  //       body: board, 
+  //     });
+  //     const result = await response.json();
+  //     return result;
+  //   } catch (error) {
+  //     console.error('Error checking Sudoku validity:', error);
+  //     throw error; 
+  //   }
+  // };
 
   export const solveSudoku = async () => {
     try {
