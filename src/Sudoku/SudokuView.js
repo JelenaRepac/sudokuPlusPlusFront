@@ -4,12 +4,12 @@ import { useState } from 'react';
 import './Sudoku.css';
 import { CiPause1 } from "react-icons/ci";
 import { CiPlay1 } from "react-icons/ci";
-import { GrClearOption } from "react-icons/gr";
-import { fetchBoardFromBackend, checkCellValue, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard, fetchBoardFromBackendMedium, fetchBoardFromBackendEasy } from './SudokuController.js';
+import { fetchBoardFromBackend, checkCellValue,solveSud, getCellHints, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard, fetchBoardFromBackendMedium, fetchBoardFromBackendEasy } from './SudokuController.js';
 import Swal from 'sweetalert2';
 import SudokuCell from './SudokuCell.js';
-import { LuTimerReset } from "react-icons/lu";
 import { PiClockClockwiseThin  } from "react-icons/pi";
+import { HiOutlineLightBulb } from "react-icons/hi2";
+import { withTheme } from '@emotion/react';
 const SudokuView = () => {
   const [board, setBoard] = useState([]);
   const [initialCells, setInitialCells] = useState([]);
@@ -18,7 +18,9 @@ const SudokuView = () => {
   const [selectedCell, setSelectedCell] = useState(null);
   const [timer, setTimer] = useState(0); // Assuming timer is in seconds
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-
+  const [isLightbulbClicked, setIsLightbulbClicked] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +93,7 @@ const SudokuView = () => {
   }, [isTimerRunning]);
 
 
+  
   const startTimer = () => {
     setIsTimerRunning(true);
   };
@@ -100,6 +103,7 @@ const SudokuView = () => {
   const resetTimer = () =>{
     setTimer(0);
   }
+
   const clearBord = () => {
     const clearedBoard = board.map((row, rowIndex) =>
     row.map((cell, colIndex) =>
@@ -181,6 +185,28 @@ const SudokuView = () => {
     }
   }
 
+  const handleLightbulbClick = () => {
+    setTooltipContent(null);
+    setIsLightbulbClicked(!isLightbulbClicked);
+  };
+
+  const handleMouseEnter = async (rowIndex, colIndex, event) => {
+    if (isLightbulbClicked) {
+      const result = await getCellHints(board, rowIndex, colIndex);
+      setTooltipContent(result.result); 
+
+      if (event) {
+        const tooltipTop = event.clientY + window.scrollY;
+        const tooltipLeft = event.clientX + window.scrollX;
+        setTooltipPosition({ top: tooltipTop, left: tooltipLeft });
+      }
+  
+    }
+  };
+  const handleMouseLeave = () => {
+    setTooltipContent(null); 
+  };
+
   //CHECK WHOLE BOARD VALIDITY
   const handleCheckSudokuValidity = async () => {
     try {
@@ -188,10 +214,33 @@ const SudokuView = () => {
       console.log(isValid.result);
       if (isValid.result) {
         Swal.fire({
+          position: "top-end",
+          icon: "success",
           title: "Sudoku is solved",
-          width: 600,
-          padding: "3em",
-          color: "#7FFFD4",
+          width: 500,
+          background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
+          padding: "15px",
+          timer: 1000,
+          customClass: {
+            title: 'pop-up'
+          },
+          showConfirmButton: false,
+        });
+      }
+      else{
+        Swal.fire({
+          position: "top-end",
+          icon:"error",
+          title: "Sudoku is not solved",
+          width: 500,
+          background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
+          padding: "15px",
+          timer: 1000,
+          customClass: {
+            title: 'pop-up',
+          },
+          showConfirmButton: false,
+        
         });
       }
     } catch (error) {
@@ -242,6 +291,8 @@ const SudokuView = () => {
                 )}
                 onCellClick={() => handleCellClick(rowIndex, columnIndex)}
                 onCellBlur={(value) => handleChange(rowIndex, columnIndex, value)}
+                onMouseEnter={(event) => handleMouseEnter(rowIndex, columnIndex,event)}
+                onMouseLeave={handleMouseLeave}
             />
             ))}
           </div>
@@ -251,13 +302,13 @@ const SudokuView = () => {
             <CiPlay1 onClick={startTimer} className="icon" />
             <CiPause1 onClick={pauseTimer} className="icon" />
             <PiClockClockwiseThin onClick = {resetTimer} className="icon" style={{"font-size":"35px"}} />
-          
+            <HiOutlineLightBulb className="icon" style={{"color":"orange"}}  onClick={handleLightbulbClick}/>
           </div>
           <div className='check'>
             <button onClick={handleCheckSudokuValidity} className="button-check" style={{ "width": "140px" }}>
               Check Validity
             </button>
-            <button onClick={handleSolveSudoku} className="button-check" style={{ "width": "140px" }}>
+            <button onClick={()=>handleSolveSudoku(board)} className="button-check" style={{ "width": "140px" }}>
               Solve
             </button>
             <button onClick={clearBord} className="button-check" style={{ "width": "140px" }}>
@@ -268,7 +319,7 @@ const SudokuView = () => {
 
         </div>
 
-
+    
         <div className='levels'>
           <button onClick={generateEasyBoard} className="button-check" style={{ "color": "green" }}>
             EASY
@@ -282,6 +333,14 @@ const SudokuView = () => {
         </div>
 
       </div>
+
+      {Array.isArray(tooltipContent) && (
+        <div className="tooltip" style={{ top: tooltipPosition.top, left: tooltipPosition.left }}>
+          {tooltipContent.map((number, index) => (
+            <div key={index}>{number}</div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

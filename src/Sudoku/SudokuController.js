@@ -1,5 +1,7 @@
 
 
+
+
   export const fetchBoardFromBackend = async () => {
     try {
       const response = await fetch('http://localhost:8080/board');
@@ -66,6 +68,48 @@
       throw error;
     }
   };
+  export const getCellHints = async (board, rowIndex, columnIndex) => {
+    try {
+      const response = await fetch('http://localhost:8080/cell-hints', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          board: board,
+          rowIndex: rowIndex,
+          columnIndex: columnIndex,
+        }),
+        credentials: 'include',
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error fetching cell hints:', error);
+      throw error;
+    }
+  };
+  
+  // export const solveSud = async (board) => {
+  //   console.log(board);
+  //   try {
+  //     const response = await fetch('http://localhost:8080/solve-sudoku', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         board: board
+  //       }),
+  //       credentials: 'include',
+  //     });
+  //     const result = await response.json();
+  //     return result;
+  //   } catch (error) {
+  //     console.error('Error fetching cell hints:', error);
+  //     throw error;
+  //   }
+  // };
   
 
   export const checkSudokuValidity = async (board) => {

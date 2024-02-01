@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 
-const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable, isInitial, isInvalid }) => {
+const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable, isInitial, isInvalid , onMouseEnter, }) => {
   const cellClasses = classNames({
     'editable': isEditable,
     'initial': isInitial,
@@ -33,6 +33,7 @@ const SudokuCell = ({ value, isSelected, onCellClick, onCellBlur, isEditable, is
       onClick={onCellClick}
       onBlur={handleBlur}
       onInput={handleInput}
+      onMouseEnter={(event) => onMouseEnter(event)}
     >
       {content}
     </div>
