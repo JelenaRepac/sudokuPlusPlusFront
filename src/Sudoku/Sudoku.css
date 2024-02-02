@@ -118,7 +118,7 @@ h1{
 .selected {
   background-color:rgba(78, 71, 71, 0.332);
   color: black;
-  border: 1px solid rgb(11, 11, 74); 
+  border: 1px solid rgb(0, 0, 0);
 }
 
 .icon {
@@ -190,6 +190,6 @@ h1{
 
 .pop-up{
   font-size: 30px; 
-  color:rgba(78, 71, 71, 0.332);
+  color:rgba(78, 71, 71, 0.548);
  
 }

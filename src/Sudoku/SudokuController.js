@@ -8,7 +8,6 @@
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching Sudoku board:', error.message);
       throw error;
     }
   };
@@ -20,7 +19,6 @@
       console.log(data);
       return data;
     } catch (error) {
-      console.error('Error fetching Sudoku board:', error.message);
       throw error;
     }
   };
@@ -42,7 +40,6 @@
       console.log(data);
       return data;
     } catch (error) {
-      console.error('Error fetching Sudoku board:', error.message);
       throw error;
     }
   };
@@ -64,7 +61,6 @@
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error('Error checking cell value:', error);
       throw error;
     }
   };
@@ -85,31 +81,29 @@
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error('Error fetching cell hints:', error);
       throw error;
     }
   };
   
-  // export const solveSud = async (board) => {
-  //   console.log(board);
-  //   try {
-  //     const response = await fetch('http://localhost:8080/solve-sudoku', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         board: board
-  //       }),
-  //       credentials: 'include',
-  //     });
-  //     const result = await response.json();
-  //     return result;
-  //   } catch (error) {
-  //     console.error('Error fetching cell hints:', error);
-  //     throw error;
-  //   }
-  // };
+  export const solveSud = async (board) => {
+    console.log(board);
+    try {
+      const response = await fetch('http://localhost:8080/solve-sudoku', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          board: board
+        }),
+        credentials: 'include',
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
   
 
   export const checkSudokuValidity = async (board) => {
@@ -123,7 +117,6 @@
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error('Error checking Sudoku validity:', error);
       throw error; 
     }
   };
@@ -134,7 +127,6 @@
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching Sudoku board:', error.message);
       throw error;
     }
   };

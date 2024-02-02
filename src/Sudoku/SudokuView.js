@@ -9,7 +9,8 @@ import Swal from 'sweetalert2';
 import SudokuCell from './SudokuCell.js';
 import { PiClockClockwiseThin  } from "react-icons/pi";
 import { HiOutlineLightBulb } from "react-icons/hi2";
-import { withTheme } from '@emotion/react';
+import {serverError} from '../PopUp.js';
+
 const SudokuView = () => {
   const [board, setBoard] = useState([]);
   const [initialCells, setInitialCells] = useState([]);
@@ -31,7 +32,7 @@ const SudokuView = () => {
         setInitial(data);
         setInvalidCells([]);
       } catch (error) {
-        console.log(error);
+        serverError(error);
       }
     };
 
@@ -128,7 +129,7 @@ const SudokuView = () => {
       setInvalidCells([]);
 
     } catch (error) {
-      console.log(error);
+      serverError(error);
     }
   }
 
@@ -145,7 +146,7 @@ const SudokuView = () => {
       setInvalidCells([]);
 
     } catch (error) {
-      console.log(error);
+      serverError(error);
     }
   }
   const generateMediumBoard = async () => {
@@ -157,7 +158,7 @@ const SudokuView = () => {
       setInvalidCells([]);
 
     } catch (error) {
-      console.log(error);
+      serverError(error);
     }
   }
   const generateEasyBoard = async () => { 
@@ -169,19 +170,17 @@ const SudokuView = () => {
       setInvalidCells([]);
 
     } catch (error) {
-      console.log(error);
+      serverError(error);
     }
   }
 
   const handleSolveSudoku = async (board) => {
     try {
-      const data = await solveSudoku();
-      console.log(data);
+      const data = await solveSud(board);
       setBoard(data);
       setInvalidCells([]);
-
     } catch (error) {
-      console.log(error);
+      serverError(error);
     }
   }
 
@@ -216,8 +215,8 @@ const SudokuView = () => {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Sudoku is solved",
-          width: 500,
+          title: "SUDOKU IS SOLVED",
+          width: 550,
           background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
           padding: "15px",
           timer: 1000,
@@ -231,8 +230,8 @@ const SudokuView = () => {
         Swal.fire({
           position: "top-end",
           icon:"error",
-          title: "Sudoku is not solved",
-          width: 500,
+          title: "SUDOKU IS NOT SOLVED",
+          width: 550,
           background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
           padding: "15px",
           timer: 1000,
