@@ -4,7 +4,7 @@ import { useState } from 'react';
 import './Sudoku.css';
 import { CiPause1 } from "react-icons/ci";
 import { CiPlay1 } from "react-icons/ci";
-import { fetchBoardFromBackend, checkCellValue,solveSud, getCellHints, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard, fetchBoardFromBackendMedium, fetchBoardFromBackendEasy } from './SudokuController.js';
+import { fetchBoardFromBackend, checkCellValue,solveSud, sudokuDifficulty,getCellHints, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard, fetchBoardFromBackendMedium, fetchBoardFromBackendEasy } from './SudokuController.js';
 import Swal from 'sweetalert2';
 import SudokuCell from './SudokuCell.js';
 import { PiClockClockwiseThin  } from "react-icons/pi";
@@ -22,6 +22,7 @@ const SudokuView = () => {
   const [isLightbulbClicked, setIsLightbulbClicked] = useState(false);
   const [tooltipContent, setTooltipContent] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [boardClicked, setBoardClicked] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,6 +57,11 @@ const SudokuView = () => {
   }
 
   const handleCellClick = (rowIndex, columnIndex) => {
+
+    if (!boardClicked) { 
+      setBoardClicked(true);
+      startTimer(); 
+    }
     const isEditable = board[rowIndex][columnIndex] === 0;
     setSelectedNumber(board[rowIndex][columnIndex]);
     setSelectedCell({ rowIndex, columnIndex, isEditable });
@@ -79,6 +85,10 @@ const SudokuView = () => {
     );
     setBoard(newData);
     
+
+    if (!newData.some(row => row.includes(0))) {
+      handleCheckSudokuValidity(); 
+    }
   };
 
   useEffect(() => {
@@ -93,6 +103,11 @@ const SudokuView = () => {
     };
   }, [isTimerRunning]);
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
 
   
   const startTimer = () => {
@@ -118,6 +133,8 @@ const SudokuView = () => {
 
   setBoard(clearedBoard);
   setInvalidCells([]);
+  setBoardClicked(false);
+  resetTimer();
 
   };
 
@@ -127,12 +144,39 @@ const SudokuView = () => {
       setBoard(data.board);
       setInitial(data);
       setInvalidCells([]);
+      setBoardClicked(false);
+      pauseTimer();
+      resetTimer();
+      difficulty();
+
 
     } catch (error) {
       serverError(error);
     }
   }
 
+  const difficulty = async () => {
+    try {
+      const data = await sudokuDifficulty(board);
+      console.log(data);
+
+      Swal.fire({
+        position: "center",
+        icon: "info",
+        title: "SUDOKU IS "+ data,
+        width: 450,
+        background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
+        padding: "15px",
+        timer: 1000,
+        customClass: {
+          title: 'pop-up'
+        },
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      serverError(error);
+    }
+  }
   const algorithmResult = () => {
     //resavanje table uz pomoc algoritma i dobijanje rezultata
   }
@@ -177,8 +221,11 @@ const SudokuView = () => {
   const handleSolveSudoku = async (board) => {
     try {
       const data = await solveSud(board);
+      console.log(data);
       setBoard(data);
       setInvalidCells([]);
+      setBoardClicked(false);
+      pauseTimer();
     } catch (error) {
       serverError(error);
     }
@@ -249,7 +296,7 @@ const SudokuView = () => {
 
   return (
     <div>
-      <div className="timer">{timer} seconds</div>
+      <div className='timer'>{formatTime(timer)}</div>
 
       <div className="sudoku-container">
 

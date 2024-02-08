@@ -6,6 +6,7 @@
     try {
       const response = await fetch('http://localhost:8080/board');
       const data = await response.json();
+      console.log(data);
       return data;
     } catch (error) {
       throw error;
@@ -89,6 +90,26 @@
     console.log(board);
     try {
       const response = await fetch('http://localhost:8080/solve-sudoku', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          board: board
+        }),
+        credentials: 'include',
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  export const sudokuDifficulty = async (board) => {
+    console.log(board);
+    try {
+      const response = await fetch('http://localhost:8080/difficulty', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
