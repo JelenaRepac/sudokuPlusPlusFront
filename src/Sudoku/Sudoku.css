@@ -14,6 +14,21 @@ h1{
   padding:2px 1px 5px 1px;
   text-align:center;    
 }
+h2{
+  color:rgba(78, 71, 71, 0.332);
+  margin:70px 0px 2px 0px;
+  font-size:30px;
+  padding:2px 1px 5px 1px;
+  text-align:center;    
+}
+
+h3{
+  font-weight: bold;
+  color:rgba(78, 71, 71, 0.578);
+  font-size:15px;
+  text-align:center;  
+  padding: 10px;    
+}
 
 .sudoku-board {
   display: flex;
@@ -51,7 +66,7 @@ h1{
     justify-content: center;
     align-items: center;
     font-size: 30px;
-    margin-right: 100px;
+    margin-right: 75px;
     color:rgba(78, 71, 71, 0.708);
 }
 
@@ -73,10 +88,10 @@ h1{
 
 
 /* CSS */
-.button-check {
+.button-check  {
   margin-top: 10px;
   align-self: center;
-  background-color: #fff;
+  background-color: #fff; 
   background-image: none;
   background-position: 0 90%;
   background-repeat: repeat no-repeat;
@@ -105,7 +120,38 @@ h1{
   touch-action: manipulation;
   
 }
-
+.button  {
+  margin-top: 10px !important;
+  align-self: center !important;
+  background-color: #fff !important; 
+  background-image: none !important;
+  background-position: 0 90% !important;
+  background-repeat: repeat no-repeat !important;
+  background-size: 4px 3px !important; 
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px !important;
+  border-style: solid !important;
+  border-width: 2px !important;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px !important;
+  box-sizing: border-box !important;
+  color: #41403e !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+  font-family: Neucha, sans-serif !important;
+  font-size: 1rem !important;
+  line-height: 23px !important;
+  outline: none !important;
+  padding: .75rem !important;
+  text-decoration: none !important;
+  transition: all 235ms ease-in-out !important;
+  border-bottom-left-radius: 15px 255px !important;
+  border-bottom-right-radius: 225px 15px !important;
+  border-top-left-radius: 255px 15px !important;
+  border-top-right-radius: 15px 225px !important;
+  user-select: none !important;
+  -webkit-user-select: none !important; 
+  touch-action: manipulation !important;
+  
+}
 .button-check:hover {
   box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
   transform: translate3d(0, 2px, 0);
@@ -117,8 +163,8 @@ h1{
 
 .selected {
   background-color:rgba(78, 71, 71, 0.332);
-  color: black;
-  border: 1px solid rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
+  border: 1px solid rgba(0, 0, 0, 0.541);
 }
 
 .icon {
@@ -192,4 +238,120 @@ h1{
   font-size: 30px; 
   color:rgba(78, 71, 71, 0.548);
  
+}
+
+.border-top {
+  border-top: 2px solid black; 
+}
+
+.border-left {
+  border-left: 2px solid black; 
+}
+
+.border-bottom {
+  border-bottom: 2px solid black; 
+}
+
+.border-right {
+  border-right: 2px solid black; 
+}
+
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px); 
+  z-index: 999; 
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: rgba(78, 71, 71, 0.548); /* Change the color as needed */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.input-cell{
+  border: 4px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+
+
+.input-cell.action{
+  border: 4px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+#user-field,
+#time-field{
+  font-weight: bold;
+  color:rgba(78, 71, 71, 0.578);
+  font-size:20px;
+  text-align:center;  
+  padding: 20px;  
+}
+
+
+#user-field-1,
+#user-field-2,
+#user-field-3 {
+  font-weight: bold;
+  color:rgba(0, 0, 0, 0.496);
+  font-size:15px;
+  text-align:center;  
+  padding: 10px;  
+  margin-top: 15px;
+}
+.user{
+  display: flex;
+  flex-direction: row;
+}
+
+.leaderboard{
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+
+  
+  
+}
+
+.righ-bar{
+  display: flex;
+  flex-direction: column;
+}
+
+.users{
+  display: flex;
+  flex-direction: column;
+
+  align-items: start;
+  background-color: #ffffff89 !important; 
+  background-position: 0 90% !important;
+  background-repeat: repeat no-repeat !important;
+  background-size: 4px 3px !important; 
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px !important;
+  border-style: solid !important;
+  border-width: 2px !important;
+  box-shadow: rgba(0, 0, 0, 0.532)5px 28px 25px -18px !important;
+  box-sizing: border-box !important;
+  color: rgba(0, 0, 0, 0.749) !important;
+  
+  font-family: Neucha, sans-serif !important;
+  border-bottom-left-radius: 15px 255px !important;
+  border-bottom-right-radius: 225px 15px !important;
+  border-top-left-radius: 255px 15px !important;
+  border-top-right-radius: 15px 225px !important;
 }

@@ -85,6 +85,27 @@
       throw error;
     }
   };
+  export const checkIfNumberIsFilled = async (board, n) => {
+    try {
+      const response = await fetch('http://localhost:8080/number-filled', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          board: board,
+          n: n
+        }),
+        credentials: 'include',
+      });
+  
+      const result = await response.json();
+      console.log(result);
+      return result.result;
+    } catch (error) {
+      throw error;
+    }
+  };
   
   export const solveSud = async (board) => {
     console.log(board);
@@ -125,6 +146,28 @@
       throw error;
     }
   };
+
+  export const insertTime = async (initialBoard,board, time, user) => {
+    console.log(initialBoard);
+    try {
+      const response = await fetch('http://localhost:8080/time', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          initialBoard: initialBoard,
+          board: board,
+          time: time,
+          user: user
+        }),
+        credentials: 'include',
+      });
+      const result = await response.json();
+    } catch (error) {
+      throw error;
+    }
+  };
   
 
   export const checkSudokuValidity = async (board) => {
@@ -146,6 +189,28 @@
     try {
       const response = await fetch('http://localhost:8080/solved');
       const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  export const fetchBestResult = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/best-result');
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  export const fetchLeaderboard = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/leaderboard');
+      const data = await response.json();
+      console.log(data);
       return data;
     } catch (error) {
       throw error;
