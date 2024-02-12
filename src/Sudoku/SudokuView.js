@@ -4,7 +4,7 @@ import { useState } from 'react';
 import './Sudoku.css';
 import { CiPause1 } from "react-icons/ci";
 import { CiPlay1 } from "react-icons/ci";
-import { fetchBoardFromBackend, checkCellValue,solveSud, fetchBestResult, fetchLeaderboard,checkIfNumberIsFilled, sudokuDifficulty,getCellHints, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard, fetchBoardFromBackendMedium, fetchBoardFromBackendEasy, insertTime } from './SudokuController.js';
+import { fetchBoardFromBackend, checkCellValue,solveSud, fetchBestResult, getPerformance, fetchLeaderboard,checkIfNumberIsFilled, sudokuDifficulty,getCellHints, checkSudokuValidity, solveSudoku, fetchBoardFromBackendHard, fetchBoardFromBackendMedium, fetchBoardFromBackendEasy, insertTime } from './SudokuController.js';
 import Swal from 'sweetalert2';
 import SudokuCell from './SudokuCell.js';
 import { PiClockClockwiseThin  } from "react-icons/pi";
@@ -50,10 +50,10 @@ const SudokuView = () => {
     gamer();
     const fetchData = async () => {
       try {
-        console.log("jej");
+
         setLoading(true);
         const data = await fetchBoardFromBackend();
-        console.log(data.board);
+
         setInitialBoard(data.board);
         setBoard(data.board);
         setInitial(data);
@@ -130,7 +130,7 @@ const SudokuView = () => {
 
   useEffect(() => {
     if (lastCellValue !== null) {
-      console.log(lastCellValue);
+
       pauseTimer();
       resetTimer();
     }
@@ -147,10 +147,11 @@ const SudokuView = () => {
 
   
   
+const gamer = async () => {
+  let userName = null;
 
-  const gamer = async () =>{
-  
-    const { value: formValues } = await Swal.fire({
+  while (!userName || !userName.trim()) {
+    const { value: formValues, dismiss } = await Swal.fire({
       title: "Insert your name:",
       html: `
         <input id="swal-input1" class="swal2-input">
@@ -158,22 +159,56 @@ const SudokuView = () => {
       focusConfirm: false,
       background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
       padding: "15px",
-      width:"500px",
+      width: "500px",
       customClass: {
         title: 'pop-up',
-        confirmButton:'button',
+        confirmButton: 'button',
       },
       preConfirm: () => {
-        return [
-          document.getElementById("swal-input1").value,
-        ];
+        return document.getElementById("swal-input1").value;
       }
     });
-    if (formValues) {
-      setUser(formValues[0]);
+
+    if (dismiss === Swal.DismissReason.cancel) {
+      return; // User clicked cancel or outside the modal
     }
-   
+
+    userName = formValues;
+
+    if (!userName || !userName.trim()) {
+      await Swal.fire({
+        title: "Name is required!",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
+        padding: "15px",
+        width: "500px",
+        timer: 2000,
+        customClass: {
+          title: 'pop-up'
+        },
+        showConfirmButton:false
+      });
+    }
   }
+
+  setUser(userName);
+
+  await Swal.fire({
+    position: "center",
+    title: "Hello " + userName + "!\n\nHAVE FUN SOLVING SUDOKU ++",
+    width: 450,
+    background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
+    padding: "15px",
+    timer: 2000,
+    customClass: {
+      title: 'pop-up'
+    },
+    showConfirmButton: false,
+  });
+};
+
+  
   // const checkNumberFilled = async (value) =>{
   //   console.log(board);
   //   const numberFilled  = await checkIfNumberIsFilled(board, value);
@@ -216,7 +251,8 @@ const SudokuView = () => {
         document.getElementById('time-field').textContent = "X";
       }
       else{
-        document.getElementById('user-field').textContent = `${user}`;
+        const firstName = user.split(' ')[0]; 
+        document.getElementById('user-field').textContent = firstName;
         document.getElementById('time-field').textContent = `${time}`;
       }
     
@@ -296,7 +332,6 @@ const SudokuView = () => {
 
   const initializeNewBoard = async () => {
     try {
-      console.log(user);
       setLoading(true);
       const data = await fetchBoardFromBackend();
       setInitialBoard(data.board);
@@ -310,7 +345,6 @@ const SudokuView = () => {
 
 
     } catch (error) {
-      console.log(error);
       serverError(error);
     } finally{
       setLoading(false);
@@ -320,7 +354,6 @@ const SudokuView = () => {
   const difficulty = async () => {
     try {
       const data = await sudokuDifficulty(board);
-      console.log(data);
 
       Swal.fire({
         position: "center",
@@ -339,16 +372,67 @@ const SudokuView = () => {
       serverError(error);
     }
   }
-  const algorithmResult = () => {
-    //resavanje table uz pomoc algoritma i dobijanje rezultata
-  }
+  const algorithmResult = async () => {
+    const res = await getPerformance(board);
+    console.log(res);
+    if(res.resolvedBoard===null){
+      Swal.fire({
+        title: "Performance measurement is enabled only for EASY boards!",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
+        padding: "15px",
+        width: "500px",
+        timer: 2000,
+        customClass: {
+          title: 'pop-up'
+        },
+        showConfirmButton:false
+      });
+    }
+    else{
+      
+    Swal.fire({
+      position: "center",
+      title: `Sudoku board solved in ${res.performance} milliseconds by the algorithm.`,
+      text: "Do you want to see solved board?",
+      width: 500,
+      background: `url('https://img.freepik.com/free-vector/abstract-horizontal-grid-lines-graph-style-graphic-design_1017-39918.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1706745600&semt=ais')`,
+      padding: "15px",
+      customClass: {
+          title: 'pop-up',
+          confirmButton:'button',
+          cancelButton:'button'
+      },
+      showConfirmButton: true,
+      confirmButtonText: "Yes",
+      showCancelButton: true,
+      cancelButtonText: "No",
+  }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(res.resolvedBoard);
+            setBoard(res.resolvedBoard);
+            setInvalidCells([]);
+            setBoardClicked(false);
+            pauseTimer();
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+          
+      }
+    
+    
+
+  });
+      
+    }
+}
+
 
   const generateHardBoard = async () => {
     try {
       pauseTimer();
       resetTimer();
       const data = await fetchBoardFromBackendHard();
-      console.log(data);
+
       setInitialBoard(data.board);
       setBoard(data.board);
       setInitial(data);
@@ -363,7 +447,7 @@ const SudokuView = () => {
       pauseTimer();
       resetTimer();
       const data = await fetchBoardFromBackendMedium();
-      console.log(data);
+
       setInitialBoard(data.board);
       setBoard(data.board);
       setInitial(data);
@@ -379,7 +463,7 @@ const SudokuView = () => {
       resetTimer();
   
       const data = await fetchBoardFromBackendEasy();
-      console.log(data);
+
       setInitialBoard(data.board);
       setBoard(data.board);
       setInitial(data);
@@ -394,6 +478,7 @@ const SudokuView = () => {
     try {
       const data = await solveSud(board);
       console.log(data);
+      
       if(data[1]!=null){
         setBoard(data);
         setInvalidCells([]);
@@ -402,12 +487,12 @@ const SudokuView = () => {
       }
       else{
         const dat= data[0];
-    
+        console.log(dat);
         const slicedArray = [];
         for (let i = 0; i < 9; i++) {
             slicedArray.push(dat.slice(i * 9, (i + 1) * 9));
         }
-          console.log(slicedArray);
+          
           setBoard(slicedArray);
           setInvalidCells([]);
           setBoardClicked(false);
@@ -453,7 +538,7 @@ const SudokuView = () => {
   const handleCheckSudokuValidity = async () => {
     try {
       const isValid = await checkSudokuValidity(board);
-      console.log(isValid.result);
+
       if (isValid.result) {
         Swal.fire({
           position: "top-end",
@@ -489,10 +574,8 @@ const SudokuView = () => {
       console.error('Error checking Sudoku validity:', error);
     }
 
-    setBoard(emptyBoard);
-    setTimeout(() => {
-      generateEasyBoard();
-     }, 1000); 
+    
+   
 
   };
 
@@ -515,6 +598,9 @@ const SudokuView = () => {
           </button>
           <button className="button-check" onClick={algorithmResult} style={{ "width": "180px" }}>
             Algorithm result
+          </button>
+          <button className="button-check" onClick={algorithmResult} style={{ "width": "180px" }}>
+            Insert your board
           </button>
           <h2>BEST RESULT</h2>
           <div className='user'>

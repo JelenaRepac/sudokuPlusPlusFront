@@ -216,3 +216,19 @@
       throw error;
     }
   };
+
+ 
+  export const getPerformance = async (board) => {
+    try {
+      const response = await fetch('http://localhost:8080/performance', {
+        method: 'POST',
+        body:  JSON.stringify({
+          board
+        }), 
+      });
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      throw error; 
+    }
+  };
