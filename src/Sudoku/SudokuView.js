@@ -12,6 +12,7 @@ import { HiOutlineLightBulb } from "react-icons/hi2";
 import {serverError} from '../PopUp.js';
 import { CiUser } from "react-icons/ci";
 import { CiTimer } from "react-icons/ci";
+import { PiUserCircleLight } from "react-icons/pi";
 
 const SudokuView = () => {
   const emptyBoard = [
@@ -170,7 +171,7 @@ const gamer = async () => {
     });
 
     if (dismiss === Swal.DismissReason.cancel) {
-      return; // User clicked cancel or outside the modal
+      return; 
     }
 
     userName = formValues;
@@ -532,6 +533,7 @@ const gamer = async () => {
   };
   const handleMouseLeave = () => {
     setTooltipContent(null); 
+
   };
 
   //CHECK WHOLE BOARD VALIDITY
@@ -581,6 +583,11 @@ const gamer = async () => {
 
   return (
     <div>
+     {user && (
+      
+     <div className="active-user"> 
+     {user}
+    </div>) }
       {loading && (
         <div>
           <div className='spinner-container'>
@@ -598,9 +605,6 @@ const gamer = async () => {
           </button>
           <button className="button-check" onClick={algorithmResult} style={{ "width": "180px" }}>
             Algorithm result
-          </button>
-          <button className="button-check" onClick={algorithmResult} style={{ "width": "180px" }}>
-            Insert your board
           </button>
           <h2>BEST RESULT</h2>
           <div className='user'>
