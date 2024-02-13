@@ -12,7 +12,6 @@ import { HiOutlineLightBulb } from "react-icons/hi2";
 import {serverError} from '../PopUp.js';
 import { CiUser } from "react-icons/ci";
 import { CiTimer } from "react-icons/ci";
-import { PiUserCircleLight } from "react-icons/pi";
 
 const SudokuView = () => {
   const emptyBoard = [
@@ -436,6 +435,8 @@ const gamer = async () => {
 
       setInitialBoard(data.board);
       setBoard(data.board);
+      
+      setBoardClicked(false);
       setInitial(data);
       setInvalidCells([]);
 
@@ -451,6 +452,8 @@ const gamer = async () => {
 
       setInitialBoard(data.board);
       setBoard(data.board);
+      
+      setBoardClicked(false);
       setInitial(data);
       setInvalidCells([]);
 
@@ -467,6 +470,8 @@ const gamer = async () => {
 
       setInitialBoard(data.board);
       setBoard(data.board);
+      
+      setBoardClicked(false);
       setInitial(data);
       setInvalidCells([]);
 
